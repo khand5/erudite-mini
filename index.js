@@ -2,6 +2,7 @@
   Constants
 */
 const constants = require('./constants');
+const cors = require('cors')
 
 const jsonwebtoken = require('jsonwebtoken')
 const mongoose = require('mongoose')
@@ -21,7 +22,7 @@ var UserSchema = new mongoose.Schema({
   email: String,
   password: String,
   account_type: String,
-  grades: [{ quiz: String, mark: Number}],
+  grades: [String],
   courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
 })
 var CourseSchema = new mongoose.Schema({
@@ -33,7 +34,7 @@ var CourseSchema = new mongoose.Schema({
     file_location: String,
     response_to_course_id: mongoose.Schema.Types.ObjectId,
     response_to_file_id: mongoose.Schema.Types.ObjectId,
-    submitted_by: String,
+    submitted_by: mongoose.Schema.Types.ObjectId,
     submission_time: Date,
   }],
 })
@@ -62,6 +63,7 @@ require('./demo_setup/demo_database')(User, Course, function(val) { sampleDefaul
 */
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(cors())
 
 function createToken(email) {
   return jsonwebtoken.sign({email: email}, constants.jwtSecret, {expiresIn: constants.tokenTime})
@@ -182,19 +184,6 @@ function toObjectId(str) {
 // Upload student assignment
 //
 app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.single('assignment'), function(req, res) {
-
-  /*req.file = { fieldname: 'assignment',
-    originalname: 'download.pdf',
-    encoding: '7bit',
-    mimetype: 'application/pdf',
-    destination: './data/student_uploads',
-    filename: 'ea4f03ceea8f301b86d25373aea607e2',
-    path: 'data/student_uploads/ea4f03ceea8f301b86d25373aea607e2',
-    size: 81124 }
-  */
-  console.log(req.param('course_id'))
-  console.log(req.file)
-
   var course_id = req.param('course_id')
   var file_id = req.param('file_id')
 
@@ -221,8 +210,8 @@ app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.sing
 //
 // Get submitted student assignments for a course
 //
-app.post('/course-content-submissions', checkToken(), function(req, res) {
-  Course.findOne({id: req.body.course_id, 'assignments.submitted_by': req.user._id, 'assignments.response_to_file_id': req.body.file_id}).exec(function(error, data) {
+app.post('/course-student-submissions', checkToken(), function(req, res) {
+  Course.findOne({_id: req.body.course_id, 'assignments.submitted_by': req.user._id, 'assignments.response_to_file_id': req.body.file_id}).exec(function(error, data) {
     if(error || !data) return res.json(constants.messages.invalid)
 
     var student_assignments = []
@@ -232,13 +221,48 @@ app.post('/course-content-submissions', checkToken(), function(req, res) {
         student_assignments.push(data.assignments[i])
       }
     }
-    
+
     return res.json({
       assignments: student_assignments
     })
   })
 })
 
+//
+// Quiz : placeholder
+//
+app.post('/course-quiz-demo', checkToken(), function(req, res) {
+  return res.json({
+    name: 'Demo Quiz',
+    student: req.user.email,
+    student_id: req.user._id,
+    q1: 'f(x,y) = sin(x)cos(y) + cos(x)sin(y), f(x,y)=?',
+    a1: '[0]{sin(x+y)},{sin(x-y)},{cos(x+y)}',
+    q2: 'f(x) = sin(2x), f(x)=?',
+    a2: '[0]{2sin(x)cos(x)},{2[sin(x)]^2},{2[sin(x)cos(y)]^2}',
+    q3: 'f(x) = sin(x) + sin(y) = 2[sin((x+y)/2][cos((x-y)/2)]',
+    a3: '[2]{sin(x)-cos(y)},{2[sin(x)+cos(y)]},{sin(x)+cos(y)}',
+  })
+})
+
+app.post('/course-quiz-submit', checkToken(), function(req, res) {
+
+  var quiz_name_and_grades = `${req.body.quiz_name}:${req.body.grades}`
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    {$push: {"grades": quiz_name_and_grades}},
+    {safe: true, upsert: true},
+    function(err, model) {
+        console.log(err);
+    }
+  )
+
+  return res.json({
+    success : 'true',
+    message : 'Student grades set.',
+  })
+})
 
 function checkToken() {
   return function(req, res, next) {
