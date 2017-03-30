@@ -317,3 +317,12 @@ app.use(function(req, res) {
 app.listen(constants.port)
 
 console.log(`Listening localhost:${constants.port}`)
+
+//
+// API Stack
+//
+app._router.stack.forEach(function(r){
+  if (r.route && r.route.path){
+    console.log(r.route.path)
+  }
+})
