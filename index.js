@@ -87,7 +87,7 @@ app.post('/login', function(req, res) {
               message: 'Logged in.',
               token: token
             })
-          } else return res.json(invalidCredentials)
+          } else return res.json(constants.messages.invalidCredentials)
         })
       }
     })
