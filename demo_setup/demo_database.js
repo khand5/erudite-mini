@@ -11,7 +11,8 @@ module.exports = function(User, Course, cb) {
       var sampleTeacher = new User({
         email: 'sample@teacher.ca',
         password: 'sample',
-        account_type: 'Teacher'
+        account_type: 'Teacher',
+        grades: ['Assignment1:89.9','Assignment2:92.5','Midterm1:88.9'],
       }).save(function(error, user) {
         if(!error) {
           /** Sample Course Configuration */
