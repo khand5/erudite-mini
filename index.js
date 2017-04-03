@@ -236,12 +236,12 @@ app.post('/course-quiz-demo', checkToken(), function(req, res) {
     name: 'Demo Quiz',
     student: req.user.email,
     student_id: req.user._id,
-    q1: 'f(x,y) = sin(x)cos(y) + cos(x)sin(y), f(x,y)=?',
-    a1: '[0]{sin(x+y)},{sin(x-y)},{cos(x+y)}',
-    q2: 'f(x) = sin(2x), f(x)=?',
-    a2: '[0]{2sin(x)cos(x)},{2[sin(x)]^2},{2[sin(x)cos(y)]^2}',
-    q3: 'f(x) = sin(x) + sin(y) = 2[sin((x+y)/2][cos((x-y)/2)]',
-    a3: '[2]{sin(x)-cos(y)},{2[sin(x)+cos(y)]},{sin(x)+cos(y)}',
+    q1: "Roses are red, violet's are _____?",
+    a1: "Blue",
+    q2: "What colour is the sun?",
+    a2: "Yellow",
+    q3: "Two roads diverge on a yellow ______?",
+    a3: "Wood",
   })
 })
 
