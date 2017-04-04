@@ -1,5 +1,8 @@
 # Erudite-mini
-Call the following `POST` requestsw with either curl, postman, etc.
+Erudite is a backend server supporting the Erudite-CMS android application. The server makes use of Mongoose, a javascript wrapper for MongoDB.
+
+## Usage
+Call the following `POST` requests with either curl, postman, etc.
 
 Register with `email`, `password`, and `account_type`. This will return a `token` object that you will have to send in the body of all of your future `POST` requests.
 
