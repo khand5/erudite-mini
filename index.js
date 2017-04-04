@@ -1,3 +1,7 @@
+// Erudite-mini Server
+// The following is an Express based NodeJS server using
+// Mongoose wrapper for accessing MongoDB.
+
 /*
   Constants
 */
@@ -19,26 +23,31 @@ mongoose.connect('mongodb://localhost:27017/erudite-database')
   Database Definition
 */
 var UserSchema = new mongoose.Schema({
-  email: String,
-  password: String,
-  account_type: String,
-  grades: [String],
-  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  email:          String,
+  password:       String,
+  account_type:   String,
+  grades:         [String],
+  courses:        [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course'}],
 })
+
 var CourseSchema = new mongoose.Schema({
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  name: String,
-  content: [{ file_name: String, file_location: String}],
+  name:     String,
+  owner:    { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  content:  [{ file_name: String, file_location: String}],
   assignments: [{
-    file_name: String,
-    file_location: String,
-    response_to_course_id: mongoose.Schema.Types.ObjectId,
-    response_to_file_id: mongoose.Schema.Types.ObjectId,
-    submitted_by: mongoose.Schema.Types.ObjectId,
-    submission_time: Date,
+    file_name:              String,
+    file_location:          String,
+    submission_time:        Date,
+    response_to_course_id:  mongoose.Schema.Types.ObjectId,
+    response_to_file_id:    mongoose.Schema.Types.ObjectId,
+    submitted_by:           mongoose.Schema.Types.ObjectId,
   }],
 })
 
+
+/*
+  Database Middleware
+*/
 UserSchema.pre('save', function(next) {
   var user = this
   if(!user.isModified('password')) return next()
@@ -54,7 +63,7 @@ UserSchema.pre('save', function(next) {
 var User = mongoose.model('User', UserSchema)
 var Course = mongoose.model('Course', CourseSchema)
 
-/** Initialize Dummy Database */
+// Initialize Dummy Database
 var sampleDefaultCourseId = null
 require('./demo_setup/demo_database')(User, Course, function(val) { sampleDefaultCourseId = val })
 
@@ -130,7 +139,7 @@ app.post('/register', function(req, res) {
 })
 
 //
-// View registered course list
+// Course List Endpoint
 //
 app.post('/course-list', checkToken(), function(req, res) {
   User.findOne({_id: req.user._id}).populate('courses').exec(function(error, user) {
@@ -145,7 +154,7 @@ app.post('/course-list', checkToken(), function(req, res) {
 })
 
 //
-// View course content list
+// Course Content List Endpoint
 //
 app.post('/course-content', checkToken(), function(req, res) {
   Course.findOne({_id: req.body.course_id}).exec(function(error, course) {
@@ -159,7 +168,7 @@ app.post('/course-content', checkToken(), function(req, res) {
 })
 
 //
-// View course content file
+// Course Content File
 //
 app.post('/course-content-file', checkToken(), function(req, res) {
   Course.findOne({_id: req.body.course_id}).exec(function(error, course) {
@@ -176,12 +185,8 @@ app.post('/course-content-file', checkToken(), function(req, res) {
   })
 })
 
-function toObjectId(str) {
-  return mongoose.mongo.BSONPure.ObjectID.fromHexString(str)
-}
-
 //
-// Upload student assignment
+// Upload Student Assignment Endpoint
 //
 app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.single('assignment'), function(req, res) {
   var course_id = req.param('course_id')
@@ -208,7 +213,7 @@ app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.sing
 })
 
 //
-// Get submitted student assignments for a course
+// Submitted Student Assignments Endpoint
 //
 app.post('/course-student-submissions', checkToken(), function(req, res) {
   Course.findOne({_id: req.body.course_id, 'assignments.submitted_by': req.user._id, 'assignments.response_to_file_id': req.body.file_id}).exec(function(error, data) {
@@ -229,7 +234,7 @@ app.post('/course-student-submissions', checkToken(), function(req, res) {
 })
 
 //
-// Quiz : placeholder
+// Placeholder Quiz Endpoint
 //
 app.post('/course-quiz-demo', checkToken(), function(req, res) {
   return res.json({
@@ -245,6 +250,9 @@ app.post('/course-quiz-demo', checkToken(), function(req, res) {
   })
 })
 
+//
+// Submit Quiz Endpoint
+//
 app.post('/course-quiz-submit', checkToken(), function(req, res) {
 
   var quiz_name_and_grades = `${req.body.quiz_name}:${req.body.grades}`
@@ -264,6 +272,7 @@ app.post('/course-quiz-submit', checkToken(), function(req, res) {
   })
 })
 
+//
 function checkToken() {
   return function(req, res, next) {
     var token = req.header('Authentication')
@@ -294,6 +303,9 @@ app.post('/dash', checkToken(), function(req, res) {
   })
 })
 
+//
+// Database Reset Endpoint
+//
 app.post('/clean', function(req, res) {
   User.remove({}, function(error) { console.log(error)})
   Course.remove({}, function(error) { console.log(error)})
@@ -317,12 +329,3 @@ app.use(function(req, res) {
 app.listen(constants.port)
 
 console.log(`Listening localhost:${constants.port}`)
-
-//
-// API Stack
-//
-app._router.stack.forEach(function(r){
-  if (r.route && r.route.path){
-    console.log(r.route.path)
-  }
-})
