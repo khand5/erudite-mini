@@ -54,7 +54,7 @@ Access a specific file within a course with the following. You can acquire the `
             file_id
 ```
 
-Upload a student `assignment` in response to a specific file. *Remember!* The `file_id` is the id of the file you want to upload in response to. This file is uploaded by the teacher.* Include `course_id` and `file_id` in the url itself. Example: `/course-content-submit/AZ8987B/71SF23423` where the first parameter is the `course_id`.
+Upload a student `assignment` in response to a specific file. **Remember!** The `file_id` is the id of the file you want to upload in response to. This file is uploaded by the teacher.* Include `course_id` and `file_id` in the url itself. Example: `/course-content-submit/AZ8987B/71SF23423` where the first parameter is the `course_id`.
 ```
     /course-content-submit/:course_id/:file_id
         Headers:
