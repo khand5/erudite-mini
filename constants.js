@@ -10,6 +10,6 @@ module.exports = {
     invalidCredentials: {success: false, message: 'Invalid credentials.'},
     alreadyRegistered: {success: false, message: 'Email already registered.'},
     invalidToken: {success: false, message: 'Invalid Token'},
-    invalid : {success: false}
+    invalid : {success: false, message: 'Invalid Endpoint Access'}
   }
 }
