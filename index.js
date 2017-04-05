@@ -299,12 +299,35 @@ function checkToken() {
 }
 
 //
+// Protected Teacher Dash
+//
+app.post('/dash-teacher', checkToken(), function(req, res) {
+  console.log(req.user.account_type.toString())
+
+  var account_type = req.user.account_type
+
+  if (!(account_type.valueOf() == 'Teacher'.valueOf())) return res.json(constants.messages.accessRestricted)
+
+  User.findOne({email: 'student@sample.com'}).exec(function(error, student) {
+    if(error || !student) return res.json(constants.messages.invalid)
+
+    return res.json({
+      success: true,
+      message: 'Welcome to the protected route!',
+      students: [student.email, student.grades.length, student.grades]
+    })
+  })
+})
+
+//
 // Protected Endpoint
 //
 app.post('/dash', checkToken(), function(req, res) {
   return res.json({
     success: true,
     message: 'Welcome to the protected route!',
+
+
     user: req.user
   })
 })
