@@ -20,8 +20,8 @@ module.exports = function(User, Course, returnValue) {
     name: 'Demo Course',
     content: [
       {file_name:"Deliverable1_Template", file_location:"Deliverable3_Template.pdf"},
-      {file_name:"Deliverable2_Template", file_location:"Deliverable3_Template.pdf"},
-      {file_name:"Deliverable3_Template", file_location:"Deliverable3_Template.pdf"}
+      {file_name:"Deliverable2_Template", file_location:"Assignment1_Template.pdf"},
+      {file_name:"Deliverable3_Template", file_location:"Assignment2_Template.pdf"}
     ],
   })
 
