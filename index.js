@@ -220,7 +220,7 @@ app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.sing
   Course.findByIdAndUpdate(
       req.param('course_id'),
       {$push: {"assignments": {
-        file_name: req.file.originalname,
+        // file_name: req.file.originalname,
         file_location: req.file.filename,
         response_to_course_id: course_id, //course in which this file is posted in
         response_to_file_id: file_id, //file_id of file this was uploaded in response to
