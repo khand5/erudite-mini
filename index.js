@@ -48,6 +48,12 @@ var CourseSchema = new mongoose.Schema({
 /*
   Database Middleware
 */
+/**
+ * @param {User} user
+ *  The user object which should be created. It should be created with the User model (i.e. new User({})).
+ * @return {Promise}
+ *  Resolves to the saved or existing User object if a new account was created; else rejects to an error message string.
+ */
 UserSchema.pre('save', function(next) {
   var user = this
   if(!user.isModified('password')) return next()
