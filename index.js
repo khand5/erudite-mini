@@ -84,6 +84,25 @@ function createToken(email) {
   return jsonwebtoken.sign({email: email}, constants.jwtSecret, {expiresIn: constants.tokenTime})
 }
 
+function checkToken() {
+  return function(req, res, next) {
+    var token = req.header('Authentication')
+
+    if(!token) return res.json(constants.messages.parametersRequired)
+
+    jsonwebtoken.verify(token, constants.jwtSecret, function(error, decodedToken) {
+      if(error) return res.json(constants.messages.invalidToken)
+
+      User.findOne({email: decodedToken.email}, function(error, user) {
+        if(error || !user) return res.json(constants.messages.invalidToken)
+
+        req.user = user
+        return next()
+      })
+    })
+  }
+}
+
 //
 // Login Endpoint
 //
@@ -277,26 +296,6 @@ app.post('/course-quiz-submit', checkToken(), function(req, res) {
     message : 'Student grades set.',
   })
 })
-
-//
-function checkToken() {
-  return function(req, res, next) {
-    var token = req.header('Authentication')
-
-    if(!token) return res.json(constants.messages.parametersRequired)
-
-    jsonwebtoken.verify(token, constants.jwtSecret, function(error, decodedToken) {
-      if(error) return res.json(constants.messages.invalidToken)
-
-      User.findOne({email: decodedToken.email}, function(error, user) {
-        if(error || !user) return res.json(constants.messages.invalidToken)
-
-        req.user = user
-        return next()
-      })
-    })
-  }
-}
 
 //
 // Protected Teacher Dash
