@@ -4,7 +4,7 @@ Erudite is a backend server supporting the Erudite-CMS android application. The 
 ## Usage
 Call the following `POST` requests with either curl, postman, etc.
 
-Register with `email`, `password`, and `account_type`. This will return a `token` object that you will have to send in the body of all of your future `POST` requests.
+1. Register with `email`, `password`, and `account_type`. This will return a `token` object that you will have to send in the body of all of your future `POST` requests.
 
 ```
     POST /register
@@ -15,7 +15,7 @@ Register with `email`, `password`, and `account_type`. This will return a `token
             password
             account_type
 ```
-Login with `email` and `password`. This will return a `token` object that you will have to send in the body of all of your future `POST` requests.
+2. Login with `email` and `password`. This will return a `token` object that you will have to send in the body of all of your future `POST` requests.
 ```
     POST /login
         Headers:
@@ -25,7 +25,7 @@ Login with `email` and `password`. This will return a `token` object that you wi
             password
 ```
 
-Access  all courses available to the user by including a header with `Authentication = 'token'` and `Content-Type = 'application/x-www-form-urlencoded'`. You will have to include this this header in every request from now on.
+3. Access  all courses available to the user by including a header with `Authentication = 'token'` and `Content-Type = 'application/x-www-form-urlencoded'`. You will have to include this this header in every request from now on.
 ```
     POST /course-list
         Headers:
@@ -33,7 +33,7 @@ Access  all courses available to the user by including a header with `Authentica
             Content-Type = 'application/x-www-form-urlencoded'
 ```
 
-Access all available content in a course by providing a `course_id`. Remember to also include the header from above.
+4. Access all available content in a course by providing a `course_id`. Remember to also include the header from above.
 ```
     POST /course-content
         Headers:
@@ -43,7 +43,7 @@ Access all available content in a course by providing a `course_id`. Remember to
             course_id
 ```
 
-Access a specific file within a course with the following. You can acquire the `file_id` from `/course-content`
+5. Access a specific file within a course with the following. You can acquire the `file_id` from `/course-content`
 ```
     POST /course-content-file
         Headers:
@@ -54,16 +54,16 @@ Access a specific file within a course with the following. You can acquire the `
             file_id
 ```
 
-Upload a student `assignment` in response to a specific file. **Remember!** The `file_id` is the id of the file you want to upload in response to. This file is uploaded by the teacher.* Include `course_id` and `file_id` in the url itself. Example: `/course-content-submit/AZ8987B/71SF23423` where the first parameter is the `course_id`.
+6. Upload a student `assignment` in response to a specific file. **Remember!** The `file_id` is the id of the file you want to upload in response to. This file is uploaded by the teacher.* Include `course_id` and `file_id` in the url itself. Example: `/course-content-submit/AZ8987B/71SF23423` where the first parameter is the `course_id`.
 ```
     /course-content-submit/:course_id/:file_id
         Headers:
             Authentication
-            Content-Type = 'application/x-www-form-urlencoded'
+            Content-Type = 'multipart/form-encoded'
         Body:
             assignment
 ```
-Access all files that a student has submitted in response to a piece of content with `file_id`.
+7. Access all files that a student has submitted in response to a piece of content with `file_id`.
 ```
     /course-student-submissions
         Headers:
@@ -73,7 +73,7 @@ Access all files that a student has submitted in response to a piece of content 
             file_id
 ```
 
-Returns a three question sample quiz and their answers for client side marks calculation.
+8. Returns a three question sample quiz and their answers for client side marks calculation.
 ```
     /course-quiz-demo
         Headers:
@@ -81,7 +81,7 @@ Returns a three question sample quiz and their answers for client side marks cal
             Content-Type = 'application/x-www-form-urlencoded'
 ```
 
-Push the resulting grades. Both `grades` and `quiz_name` must be specified. Choose anything you want.
+9. Push the resulting grades. Both `grades` and `quiz_name` must be specified. Choose anything you want.
 ```
     `/course-quiz-submit`
         Headers:
@@ -92,7 +92,7 @@ Push the resulting grades. Both `grades` and `quiz_name` must be specified. Choo
             quiz_name
 ```
 
-Check grades.
+10. Check grades.
 ```
     /dash
         Headers:
@@ -100,7 +100,15 @@ Check grades.
             Content-Type = 'application/x-www-form-urlencoded'
 ```
 
-Emergency API call that will delete the database and initialize a new one with a sample course and sample content. Note: The server must be manually restarted to create a new sample database.
+11. Check student grades. Teachers only. Students and administrators will not have access to this endpoint.
+```
+/dash-teacher
+    Headers:
+        Authentication
+        Content-Type = 'application/x-www-form-urlencoded
+```
+
+12. Emergency API call that will delete the database and initialize a new one with a sample course and sample content. Note: The server must be manually restarted to create a new sample database.
 ```
     /clean
         Headers:
