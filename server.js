@@ -6,8 +6,8 @@
   Constants
 */
 const constants = require('./constants');
-const cors = require('cors')
 
+const cors = require('cors')
 const jsonwebtoken = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const express = require('express')
@@ -220,8 +220,6 @@ app.post('/course-content-submit/:course_id/:file_id', checkToken(), upload.sing
   Course.findByIdAndUpdate(
       req.param('course_id'),
       {$push: {"assignments": {
-        // file_name: req.file.originalname,
-        // file_location: req.file.filename,
         response_to_course_id: course_id, //course in which this file is posted in
         response_to_file_id: file_id, //file_id of file this was uploaded in response to
         submitted_by: req.user._id,
@@ -335,9 +333,11 @@ app.post('/dash', checkToken(), function(req, res) {
 // Database Reset Endpoint
 //
 app.post('/clean', function(req, res) {
-  User.remove({}, function(error) { console.log(error)})
-  Course.remove({}, function(error) { console.log(error)})
+  User.remove({}, function(error) { console.log(error) })
+  Course.remove({}, function(error) { console.log(error) })
+
   require('./demo_setup/demo_database')(User, Course, function(val) { sampleDefaultCourseId = val })
+
   return res.json({
     success: true,
     message: 'Cleaned mongo database.'
