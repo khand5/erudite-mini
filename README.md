@@ -1,5 +1,5 @@
 # Erudite-mini
-Erudite is a backend server supporting the Erudite-CMS android application. Link: https://github.com/Plan6/erudite-android The server makes use of Mongoose, a javascript wrapper for MongoDB.
+Erudite is a backend server supporting the Erudite-CMS android application. Link: https://github.com/Plan6/erudite-android. The server makes use of Mongoose, a javascript wrapper for MongoDB.
 
 ## Usage
 Call the following `POST` requests with either curl, postman, etc.
