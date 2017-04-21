@@ -56,7 +56,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 6. Upload a student `assignment` in response to a specific file. **Remember!** The `file_id` is the id of the file you want to upload in response to. This file is uploaded by the teacher.* Include `course_id` and `file_id` in the url itself. Example: `/course-content-submit/AZ8987B/71SF23423` where the first parameter is the `course_id`.
 ```
-    /course-content-submit/:course_id/:file_id
+    POST /course-content-submit/:course_id/:file_id
         Headers:
             Authentication
             Content-Type = 'multipart/form-encoded'
@@ -65,7 +65,7 @@ Call the following `POST` requests with either curl, postman, etc.
 ```
 7. Access all files that a student has submitted in response to a piece of content with `file_id`.
 ```
-    /course-student-submissions
+    POST /course-student-submissions
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded'
@@ -75,7 +75,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 8. Returns a three question sample quiz and their answers for client side marks calculation.
 ```
-    /course-quiz-demo
+    POST /course-quiz-demo
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded'
@@ -83,7 +83,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 9. Push the resulting grades. Both `grades` and `quiz_name` must be specified. Choose anything you want.
 ```
-    `/course-quiz-submit`
+    POST /course-quiz-submit
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded'
@@ -94,7 +94,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 10. Check grades.
 ```
-    /dash
+    POST /dash
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded'
@@ -102,7 +102,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 11. Check student grades. Teachers only. Students and administrators will not have access to this endpoint.
 ```
-    /dash-teacher
+    POST /dash-teacher
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded
@@ -110,7 +110,7 @@ Call the following `POST` requests with either curl, postman, etc.
 
 12. Emergency API call that will delete the database and initialize a new one with a sample course and sample content. Note: The server must be manually restarted to create a new sample database.
 ```
-    /clean
+    POST /clean
         Headers:
             Authentication
             Content-Type = 'application/x-www-form-urlencoded'
