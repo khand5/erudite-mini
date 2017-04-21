@@ -1,5 +1,5 @@
 # Erudite-mini
-Erudite is a backend server supporting the Erudite-CMS android application. The server makes use of Mongoose, a javascript wrapper for MongoDB.
+Erudite is a backend server supporting the Erudite-CMS android application. Link: https://github.com/Plan6/erudite-android The server makes use of Mongoose, a javascript wrapper for MongoDB.
 
 ## Usage
 Call the following `POST` requests with either curl, postman, etc.
@@ -102,10 +102,10 @@ Call the following `POST` requests with either curl, postman, etc.
 
 11. Check student grades. Teachers only. Students and administrators will not have access to this endpoint.
 ```
-/dash-teacher
-    Headers:
-        Authentication
-        Content-Type = 'application/x-www-form-urlencoded
+    /dash-teacher
+        Headers:
+            Authentication
+            Content-Type = 'application/x-www-form-urlencoded
 ```
 
 12. Emergency API call that will delete the database and initialize a new one with a sample course and sample content. Note: The server must be manually restarted to create a new sample database.
